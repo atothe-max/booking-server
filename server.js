@@ -28,8 +28,8 @@ const options = {
     cert: fs.readFileSync('cert.pem')
 };
 
-// Create a secure HTTPS server
-const port = 3000;
+// Use the PORT environment variable provided by Render, or default to 3000 for local development.
+const port = process.env.PORT || 3000;
 https.createServer(options, app).listen(port, () => {
     console.log(`Server is listening on https://10.144.107.192:${port}`);
     console.log('Waiting for a booking form submission...');
