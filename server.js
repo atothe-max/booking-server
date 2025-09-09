@@ -5,7 +5,6 @@ const cors = require('cors');
 const app = express();
 
 // Set up the CORS middleware to explicitly allow any origin
-// This is the simplest and most effective solution for a form submission
 const corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200, // For legacy browser support
@@ -13,12 +12,15 @@ const corsOptions = {
     allowedHeaders: ['Content-Type'] // Explicitly allow Content-Type header
 };
 
+// Apply the CORS middleware globally to the entire application
+app.use(cors(corsOptions));
+
 // Use bodyParser to parse JSON requests
 app.use(bodyParser.json());
 
 // Main endpoint for handling booking requests.
-// We apply the CORS middleware directly to the route handler.
-app.post('/api/booking', cors(corsOptions), (req, res) => {
+// The cors middleware is now handled globally, so it's not needed here.
+app.post('/api/booking', (req, res) => {
     // Log the received data to the console
     console.log('Booking request received:');
     console.log(req.body);
@@ -26,10 +28,6 @@ app.post('/api/booking', cors(corsOptions), (req, res) => {
     // Send a success response back to the client
     res.status(200).json({ message: 'Booking request successfully received!' });
 });
-
-// A separate route handler to respond to the preflight OPTIONS request
-// This is crucial for fixing the CORS error
-app.options('/api/booking', cors(corsOptions));
 
 // Use the PORT environment variable provided by Render, or default to 3000 for local development.
 const port = process.env.PORT || 3000;
